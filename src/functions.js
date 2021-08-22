@@ -1,6 +1,5 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
-const puppeteer = require('puppeteer')
 
 const spellsData = {
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerFlash.png': 'Flash',
@@ -8,16 +7,17 @@ const spellsData = {
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerHeal.png': 'Curar',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerExhaust.png': 'Exaust',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerTeleport.png': 'Teleporte',
-    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerDot.png': 'Ignite'
+    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerDot.png': 'Ignite',
+    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerBarrier.png': 'Barreira'
 }
 
 const functions = {
-    getBuildsAndRunes: async (msg, champion) => {
+    getBuildsAndRunes: async (msg, champion, lane) => {
         try{
 
-            const { data } = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/build`)
-            const $ = cheerio.load(data)
+            const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/build${lane ? `?role=${lane}` : ''}`)
 
+            const $ = cheerio.load(res.data)
             const error = $('h2.m-14g0a0e').text()
 
             if(error === 'Parece que você está perdido...'){
@@ -48,16 +48,17 @@ const functions = {
             const itens = $('img', 'div.m-14bp6ot')
                 .toArray()
                 .reverse()
-                .map((item, index) => index <= 5 ? `${$(item).attr().alt}\n` : null)
+                .map((item, index) => index <= 5 ? `💢 • ${$(item).attr().alt}\n` : null)
                 .reverse()
                 .join('')
 
             const spells = $('img.m-14dguf1')
                 .toArray()
-                .map(spell => `${spellsData[$(spell).attr().src]}\n`)
+                .map(spell => `🟣 • ${spellsData[$(spell).attr().src]}\n`)
                 .join('')
-    
-            msg.reply(`${finalStringRune}\n${itens}\n${spells}`)
+            
+            $().end()
+            return msg.reply(`${finalStringRune}\n${itens}\n${spells}`)
         }
         catch(error){
             msg.reply(`Erro: ${error.message}`)

@@ -8,12 +8,13 @@ client.login(process.env.TOKEN)
 client.on('ready', () => console.log('Rodando...'))
 
 client.on('messageCreate', msg => {
-    if(msg.content.includes('!build')){
 
-        const message = msg.content
-        const champion = msg.content.substr(message.indexOf(' ')).trim()
-    
-        functions.getBuildsAndRunes(msg, champion)
+    if(msg.content.includes('!build')){
+        const arrayMessage = msg.content.split(' ')
+        const champion = arrayMessage[1]
+        const lane = arrayMessage[2] ? arrayMessage[2].toUpperCase() : null
+
+        functions.getBuildsAndRunes(msg, champion, lane)
     }
 
     if(msg.content === '!lolhelp'){
