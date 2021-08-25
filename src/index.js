@@ -17,6 +17,13 @@ client.on('messageCreate', msg => {
         functions.getBuildsAndRunes(msg, champion, lane)
     }
 
+    if(msg.content.includes("!counters")){
+        const arrayMessage = msg.content.split(' ')
+        const champion = arrayMessage[1]
+
+        functions.counters(msg, champion)
+    }
+
     if(msg.content === '!lolhelp'){
         functions.help(msg)
     }

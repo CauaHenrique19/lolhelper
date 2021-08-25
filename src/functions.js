@@ -36,26 +36,26 @@ const functions = {
                 .map(item => $(item).attr().alt)
     
             const primaryRuneString = 
-                `1️⃣ ${runes[0]}\n\t➡️ ${primaryRune}\n\t`
+                `1️⃣ **${runes[0]}**\n\t➡️ ${primaryRune}\n\t`
             const primaryRunes = 
-                `${secondaryRune.map((rune, index) => index <= 2 ? (index !== 2 ? `\t➡️ ${rune}\n\t` : `\t➡️ ${rune}\n`) : null).join('')}`
+                `${secondaryRune.map((rune, index) => index <= 2 ? (index !== 2 ? `\t➡️ *${rune}*\n\t` : `\t➡️ *${rune}*\n`) : null).join('')}`
             
-            const secondaryRuneString = `2️⃣${runes[1]}\n`
+            const secondaryRuneString = `**2️⃣ ${runes[1]}**\n`
             const secondaryRunes = 
-                `${secondaryRune.map((rune, index) => index > 2 ? (index !== 4 ? `\t➡️ ${rune}\n` : `\t➡️ ${rune}\n`) : null).join('')}`
+                `${secondaryRune.map((rune, index) => index > 2 ? (index !== 4 ? `\t➡️ *${rune}*\n` : `\t➡️ *${rune}*\n`) : null).join('')}`
     
             const finalStringRune = `${primaryRuneString}${primaryRunes}${secondaryRuneString}${secondaryRunes}`
 
             const itens = $('img', 'div.m-14bp6ot')
                 .toArray()
                 .reverse()
-                .map((item, index) => index <= 5 ? `💢 • ${$(item).attr().alt}\n` : null)
+                .map((item, index) => index <= 5 ? `📦 ${$(item).attr().alt}\n` : null)
                 .reverse()
                 .join('')
 
             const spells = $('img.m-14dguf1')
                 .toArray()
-                .map(spell => `🟣 • ${spellsData[$(spell).attr().src]}\n`)
+                .map(spell => `🔮 • ${spellsData[$(spell).attr().src]}\n`)
                 .join('')
             
             $().end()
@@ -64,6 +64,41 @@ const functions = {
         catch(error){
             msg.reply(`Erro: ${error.message}`)
         }
+    },
+    counters: async (msg, champion) => {
+        const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/counters`)
+        const $ = cheerio.load(res.data)
+
+        const error = $('h2.m-14g0a0e').text()
+
+        if(error === 'Parece que você está perdido...'){
+            return msg.reply('Campeão não encontrado!')
+        }
+
+        const champions = $('.m-wn7d10')
+            .toArray()
+            .map((counter, index) => index <= 4 ? $(counter).text() : '')
+
+        const wr = $('span[style="color:#FFFFFF"]')
+            .toArray()
+            .map((wr, index) => index <= 4 ? $(wr).text() : '')
+
+        const arrayWithChampionsAndWr = champions.map((champion, index) => ({ champion, winrate: wr[index] }))
+        arrayWithChampionsAndWr.shift()
+        
+        arrayWithChampionsAndWr.sort((a, b) => {
+            if(a.winrate < b.winrate) return 1
+            if(a.winrate > b.winrate) return -1
+            return 0
+        })
+
+        const titleString = `Campeões counters de **${champion}**:\n\n`
+
+        const stringCounters = arrayWithChampionsAndWr
+            .map(counter => counter.champion && `⚔️ ${counter.champion}: **${counter.winrate}** de winrate\n`)
+            .join('')
+
+        msg.reply(`${titleString}${stringCounters}`)
     },
     help: (msg) => {
         msg.reply('Ajudinha de cria!')
