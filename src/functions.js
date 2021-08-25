@@ -5,10 +5,11 @@ const spellsData = {
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerFlash.png': 'Flash',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerSmite.png': 'Smite',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerHeal.png': 'Curar',
-    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerExhaust.png': 'Exaust',
+    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerExhaust.png': 'Exhaust',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerTeleport.png': 'Teleporte',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerDot.png': 'Ignite',
-    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerBarrier.png': 'Barreira'
+    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerBarrier.png': 'Barreira',
+    'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerHaste.png': 'Ghost'
 }
 
 const functions = {
