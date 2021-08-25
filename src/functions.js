@@ -77,11 +77,11 @@ const functions = {
 
         const champions = $('.m-wn7d10')
             .toArray()
-            .map((counter, index) => index <= 4 ? $(counter).text() : '')
+            .map((counter, index) => index <= 5 ? $(counter).text() : '')
 
         const wr = $('span[style="color:#FFFFFF"]')
             .toArray()
-            .map((wr, index) => index <= 4 ? $(wr).text() : '')
+            .map((wr, index) => index <= 5 ? $(wr).text() : '')
 
         const arrayWithChampionsAndWr = champions.map((champion, index) => ({ champion, winrate: wr[index] }))
         arrayWithChampionsAndWr.shift()
