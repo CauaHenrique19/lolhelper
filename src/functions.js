@@ -101,7 +101,9 @@ const functions = {
         msg.reply(`${titleString}${stringCounters}`)
     },
     help: (msg) => {
-        msg.reply('Ajudinha de cria!')
+        msg.reply(
+            `❓ Atualmente existem 2 comandos para serem utilizados:\n\n **!build NOMEDOCAMPEAO**\n\t*responsável por retornar a runa, build e spells do campeão*\n**!counters NOMEDOCAMPEAO**\n\t*responsável por retornar os 5 primeiros counters do campeão*`
+        )
     }
 }
 

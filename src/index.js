@@ -9,22 +9,20 @@ client.on('ready', () => console.log('Rodando...'))
 
 client.on('messageCreate', msg => {
 
-    if(msg.content.includes('!build')){
+    if(msg.content.startsWith('!build')){
         const arrayMessage = msg.content.split(' ')
         const champion = arrayMessage[1]
         const lane = arrayMessage[2] ? arrayMessage[2].toUpperCase() : null
-
         functions.getBuildsAndRunes(msg, champion, lane)
     }
 
-    if(msg.content.includes("!counters")){
+    if(msg.content.startsWith("!counters")){
         const arrayMessage = msg.content.split(' ')
         const champion = arrayMessage[1]
-
         functions.counters(msg, champion)
     }
 
-    if(msg.content === '!lolhelp'){
+    if(msg.content.startsWith('!lolhelp')){
         functions.help(msg)
     }
 })
