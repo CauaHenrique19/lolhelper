@@ -1,6 +1,7 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
 
+/*
 const spellsData = {
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerFlash.png': 'Flash',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerSmite.png': 'Smite',
@@ -11,13 +12,56 @@ const spellsData = {
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerBarrier.png': 'Barreira',
     'https://fastcdn.mobalytics.gg/assets/lol/images/dd/summoner-spells/SummonerHaste.png': 'Ghost'
 }
+*/
+
+const spellsd = [
+    'Flash',
+    'Incendiar',
+    'Teleporte',
+    'Curar',
+    'Exaustão',
+    'Barreira',
+    'Fantasma',
+    'Purificar',
+    'Golpear'
+]
 
 const functions = {
     getBuildsAndRunes: async (msg, champion, lane) => {
         try{
 
-            const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/build${lane ? `?role=${lane}` : ''}`)
+            //const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/build${lane ? `?role=${lane}` : ''}`)
 
+            const resNew = await axios.get(`https://www.leagueofgraphs.com/pt/champions/builds/${champion}/${lane ? `${lane}` : ''}`)
+            const a = cheerio.load(resNew.data)
+
+            const runes = a('img', 'div[style=""]')
+                .toArray()
+                .map(rune => a(rune).attr().alt)
+                .splice(0, 6)
+
+            const items = [...new Set(
+                a('img[width="48"]', 'div.championSpell')
+                    .toArray()
+                    .map((item, index) => index > 5 && index < 13 ? a(item).attr().alt : '')
+                    .filter(item => !!item)
+                )
+            ]
+
+            const spells = a('img[width="48"]', 'div.championSpell')
+                .toArray()
+                .map(spell => a(spell).attr().alt)
+                .filter(spell => spellsd.includes(spell))
+
+            const title = `Runa, Build e Spells de **${champion}**\n`
+            const runeString = runes.map(rune => `🗡️ ${rune}\n`).join('')
+            const itemsString = items.map(item => `📦 ${item}\n`).join('')
+            const spellString = spells.map(spell => `🔮 ${spell}\n`).join('')
+
+            const finalString = `${title}\n${runeString}\n${itemsString}\n${spellString}`
+            msg.reply(finalString)
+            
+            /*
             const $ = cheerio.load(res.data)
             const error = $('h2.m-14g0a0e').text()
 
@@ -60,6 +104,7 @@ const functions = {
             
             $().end()
             return msg.reply(`${finalStringRune}\n${itens}\n${spells}`)
+            */
         }
         catch(error){
             msg.reply(`Erro: ${error.message}`)
