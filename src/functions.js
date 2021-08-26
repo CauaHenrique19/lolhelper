@@ -26,13 +26,20 @@ const spellsd = [
     'Golpear'
 ]
 
+const lanes = {
+    'suporte' : 'support',
+    'sup': 'support',
+    'jg' : 'jungle',
+    'mid': 'middle'
+}
+
 const functions = {
     getBuildsAndRunes: async (msg, champion, lane) => {
         try{
 
             //const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/build${lane ? `?role=${lane}` : ''}`)
 
-            const resNew = await axios.get(`https://www.leagueofgraphs.com/pt/champions/builds/${champion}/${lane ? `${lane}` : ''}`)
+            const resNew = await axios.get(`https://www.leagueofgraphs.com/pt/champions/builds/${champion}/${lane ? `${lanes[lane]}` : ''}`)
             const a = cheerio.load(resNew.data)
 
             const runes = a('img', 'div[style=""]')
@@ -53,7 +60,7 @@ const functions = {
                 .map(spell => a(spell).attr().alt)
                 .filter(spell => spellsd.includes(spell))
 
-            const title = `Runa, Build e Spells de **${champion}**\n`
+            const title = `Runa, Build e Spells de **${champion.replace(champion.charAt(0), champion.charAt(0).toUpperCase())}**\n`
             const runeString = runes.map(rune => `🗡️ ${rune}\n`).join('')
             const itemsString = items.map(item => `📦 ${item}\n`).join('')
             const spellString = spells.map(spell => `🔮 ${spell}\n`).join('')

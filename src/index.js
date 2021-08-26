@@ -12,7 +12,7 @@ client.on('messageCreate', msg => {
     if(msg.content.startsWith('!build')){
         const arrayMessage = msg.content.split(' ')
         const champion = arrayMessage[1]
-        const lane = arrayMessage[2] ? arrayMessage[2].toUpperCase() : null
+        const lane = arrayMessage[2] ? arrayMessage[2] : null
         functions.getBuildsAndRunes(msg, champion, lane)
     }
 
