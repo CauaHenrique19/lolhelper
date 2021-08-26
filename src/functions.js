@@ -118,39 +118,86 @@ const functions = {
         }
     },
     counters: async (msg, champion) => {
-        const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/counters`)
-        const $ = cheerio.load(res.data)
+        try{
 
-        const error = $('h2.m-14g0a0e').text()
+            const res = await axios.get(`https://www.leagueofgraphs.com/pt/champions/counters/${champion}`)
+            const $ = cheerio.load(res.data)
 
-        if(error === 'Parece que você está perdido...'){
-            return msg.reply('Campeão não encontrado!')
+            const boxLoseTheRoute = $('.boxContainer')
+                .toArray()
+                .splice(1, 1)
+                
+            const loseTheRoute = $('span', $(boxLoseTheRoute).html())
+                .toArray()
+                .map(champion => $(champion).text())
+                .splice(0, 5)
+
+            const boxLoseMoreAgainst = $('.boxContainer')
+                .last()
+                
+            const loseMoreAgainstChampion = $('span', $(boxLoseMoreAgainst).html())
+                .toArray()
+                .map(champion => $(champion).text())
+                .splice(0, 5)
+
+            const loseMoreAgainstWinRate = $('progressbar', $(boxLoseMoreAgainst).html())
+                .toArray()
+                .map(winrate => (parseFloat($(winrate).attr('data-value')) * 100).toFixed(1))
+                .splice(0, 5)
+
+            const loseTheRouteTitle = `**${champion.replace(champion.charAt(0), champion.charAt(0).toUpperCase())}** mais perdeu a rota para: \n`
+            const loseTheRouteString = loseTheRoute
+                .map(champion => `🗡️ ${champion}\n`)
+                .join('')
+
+            const loseMoreAgainstChampionTitle = `**${champion.replace(champion.charAt(0), champion.charAt(0).toUpperCase())}** mais perdeu contra: \n`
+            const loseMoreAgainstChampionString = loseMoreAgainstChampion
+                .map((champion, index) => `⚔️ ${champion}: **${loseMoreAgainstWinRate[index]}%** de winrate\n`)
+                .join('')
+
+            const finalString = `${loseTheRouteTitle}\n${loseTheRouteString}\n${loseMoreAgainstChampionTitle}\n${loseMoreAgainstChampionString}`
+
+            msg.reply(finalString)
+
+            /*
+            const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/counters`)
+            const $ = cheerio.load(res.data)
+    
+            const error = $('h2.m-14g0a0e').text()
+    
+            if(error === 'Parece que você está perdido...'){
+                return msg.reply('Campeão não encontrado!')
+            }
+    
+            const champions = $('.m-wn7d10')
+                .toArray()
+                .map(counter => $(counter).text())
+    
+            const wr = $('span[style="color:#FFFFFF"]')
+                .toArray()
+                .map(wr => $(wr).text())
+
+            const arrayWithChampionsAndWr = champions.map((champion, index) => ({ champion, winrate: wr[index] }))
+            arrayWithChampionsAndWr.shift()
+                
+            arrayWithChampionsAndWr.sort((a, b) => {
+                if(a.winrate < b.winrate) return 1
+                if(a.winrate > b.winrate) return -1
+                return 0
+            })
+
+            const finalArray = arrayWithChampionsAndWr.splice(0, 5)
+            
+            const titleString = `Campeões counters de **${champion}**:\n\n`
+            const stringCounters = finalArray
+                .map(counter => `⚔️ ${counter.champion}: **${counter.winrate}** de winrate\n`)
+                .join('')
+    
+            msg.reply(`${titleString}${stringCounters}`)*/
         }
-
-        const champions = $('.m-wn7d10')
-            .toArray()
-            .map((counter, index) => index <= 5 ? $(counter).text() : '')
-
-        const wr = $('span[style="color:#FFFFFF"]')
-            .toArray()
-            .map((wr, index) => index <= 5 ? $(wr).text() : '')
-
-        const arrayWithChampionsAndWr = champions.map((champion, index) => ({ champion, winrate: wr[index] }))
-        arrayWithChampionsAndWr.shift()
-        
-        arrayWithChampionsAndWr.sort((a, b) => {
-            if(a.winrate < b.winrate) return 1
-            if(a.winrate > b.winrate) return -1
-            return 0
-        })
-
-        const titleString = `Campeões counters de **${champion}**:\n\n`
-
-        const stringCounters = arrayWithChampionsAndWr
-            .map(counter => counter.champion && `⚔️ ${counter.champion}: **${counter.winrate}** de winrate\n`)
-            .join('')
-
-        msg.reply(`${titleString}${stringCounters}`)
+        catch(error){
+            msg.reply(`Ocorreu um erro ao buscar counters de ${champion}`)
+        }
     },
     help: (msg) => {
         msg.reply(
