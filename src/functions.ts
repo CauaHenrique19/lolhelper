@@ -78,51 +78,6 @@ export const functions = {
         }
     },
     counters: async (msg, champion) => {
-        try{
-
-            
-
-            msg.reply(finalString)
-
-            /*
-            const res = await axios.get(`https://app.mobalytics.gg/pt_br/lol/champions/${champion}/counters`)
-            const $ = cheerio.load(res.data)
-    
-            const error = $('h2.m-14g0a0e').text()
-    
-            if(error === 'Parece que você está perdido...'){
-                return msg.reply('Campeão não encontrado!')
-            }
-    
-            const champions = $('.m-wn7d10')
-                .toArray()
-                .map(counter => $(counter).text())
-    
-            const wr = $('span[style="color:#FFFFFF"]')
-                .toArray()
-                .map(wr => $(wr).text())
-
-            const arrayWithChampionsAndWr = champions.map((champion, index) => ({ champion, winrate: wr[index] }))
-            arrayWithChampionsAndWr.shift()
-                
-            arrayWithChampionsAndWr.sort((a, b) => {
-                if(a.winrate < b.winrate) return 1
-                if(a.winrate > b.winrate) return -1
-                return 0
-            })
-
-            const finalArray = arrayWithChampionsAndWr.splice(0, 5)
-            
-            const titleString = `Campeões counters de **${champion}**:\n\n`
-            const stringCounters = finalArray
-                .map(counter => `⚔️ ${counter.champion}: **${counter.winrate}** de winrate\n`)
-                .join('')
-    
-            msg.reply(`${titleString}${stringCounters}`)*/
-        }
-        catch(error){
-            msg.reply(`Ocorreu um erro ao buscar counters de ${champion}`)
-        }
     },
     help: (msg) => {
         msg.reply(
