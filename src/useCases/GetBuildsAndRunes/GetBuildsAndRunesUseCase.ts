@@ -51,22 +51,24 @@ export class GetBuilsAndRunesUseCase {
             .map(rune => a(rune).attr().alt)
             .splice(0, 6)
 
-        const initialItems = [...new Set(
-            a('img[width="48"]', 'div.championSpell')
-                .toArray()
-                .map((item, index) => index > 2 && index < 6 ? a(item).attr().alt : '')
-                .filter(item => !!item)
-            )
-        ]
+        const nodeInitialItems = a('div.medium-11')
+            .first()
 
-        const items = [...new Set(
-            a('img[width="48"]', 'div.championSpell')
-                .toArray()
-                .map((item, index) => index > 5 && index < 13 ? a(item).attr().alt : '')
-                .filter(item => !!item)
-            )
-        ]
+        const initialItems = a('img[tooltip-class="itemTooltip"][width="48"]', 'div.championSpell', nodeInitialItems)
+            .toArray()
+            .map((item) => a(item).attr().alt)
 
+        const nodeBoot = a('div.medium-11')
+            .last()
+
+        const boot = a('img[tooltip-class="itemTooltip"][width="48"]', 'div.championSpell', nodeBoot)
+            .toArray()
+            .map((item) => a(item).attr().alt)
+  
+        const items = a('div.medium-13 div.iconsRow div.championSpell img[tooltip-class="itemTooltip"][width="48"]')
+            .toArray()
+            .map(item => a(item).attr().alt)
+            
         const spells = a('img[width="48"]', 'div.championSpell')
             .toArray()
             .map(spell => a(spell).attr().alt)
@@ -76,9 +78,10 @@ export class GetBuilsAndRunesUseCase {
         const runeString = runes.map(rune => `🗡️ ${rune}\n`).join('')
         const initialItemsString = initialItems.map(item => `⏰ ${item}\n`).join('')
         const itemsString = items.map(item => `📦 ${item}\n`).join('')
+        const bootString = boot.map(boot => `👢 ${boot}\n`).join('')
         const spellString = spells.map(spell => `🔮 ${spell}\n`).join('')
 
-        const finalString = `${title}\n**⬇️ Runa: **\n${runeString}\n**⬇️ Itens iniciais: **\n${initialItemsString}\n**⬇️ Build: **\n${itemsString}\n**⬇️ Spells: **\n${spellString}`
+        const finalString = `${title}\n**⬇️ Runa: **\n${runeString}\n**⬇️ Itens iniciais: **\n${initialItemsString}\n**⬇️ Build: **\n${itemsString}${bootString}\n**⬇️ Spells: **\n${spellString}`
         return finalString
     }
 }
