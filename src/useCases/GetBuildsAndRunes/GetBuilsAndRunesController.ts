@@ -1,4 +1,5 @@
 import { Message } from 'discord.js'
+import { errors } from '../../Errors/Errors';
 import { GetBuilsAndRunesUseCase } from "./GetBuildsAndRunesUseCase";
 
 export class GetBuildsAndRunesController{
@@ -14,7 +15,8 @@ export class GetBuildsAndRunesController{
             message.reply(finalString)
         }
         catch(error){
-            message.reply(error.message)
+            const errorMessage = errors[`${error.message}`] || `Erro ao tentar encontar campeão: ${error.message}`
+            message.reply(errorMessage)
         }
     }
 }

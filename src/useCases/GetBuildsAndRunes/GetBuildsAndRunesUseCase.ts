@@ -6,6 +6,7 @@ import { Lanes } from '../../Enums/LanesEnum'
 export class GetBuilsAndRunesUseCase {
 
     spellsArray : String[] = []
+    aliasChampions = {}
 
     constructor(){
         this.spellsArray = [
@@ -19,9 +20,27 @@ export class GetBuilsAndRunesUseCase {
             'Purificar',
             'Golpear'
         ]
+        
+        this.aliasChampions = {
+            'mf': 'missfortune',
+            'jarvan': 'jarvaniv',
+            'lee': 'leesin',
+            'blitz': 'blitzcrank',
+            'voli': 'volibear',
+            'tk': 'tahmkench',
+            'xin': 'xinzhao',
+            'fiddle': 'fiddlesticks',
+            'gp': 'gangplank',
+            'ww': 'warwick',
+            'mundo': 'drmundo',
+            'heimer': 'heimerdinger',
+            'aurelion': 'aurelionsol'
+        }
     }
 
     async execute(champion: String, lane: String) : Promise<string> {
+        champion = this.aliasChampions[`${champion}`] || champion
+        
         const resNew = await axios.get(`https://www.leagueofgraphs.com/pt/champions/builds/${champion}/${lane ? `${Lanes[`${lane}`]}` : ''}`)
         const a = cheerio.load(resNew.data)
 
