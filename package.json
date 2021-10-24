@@ -1,11 +1,11 @@
 {
-  "name": "LeagueOfLegendsHelper",
+  "name": "lolhelper",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "start": "tsnd --transpile-only --respawn --ignore-watch node_modules src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +15,11 @@
     "cheerio": "^1.0.0-rc.10",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "nodemon": "^2.0.12",
     "puppeteer": "^10.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.4"
   }
 }
